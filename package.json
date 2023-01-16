@@ -1,0 +1,9 @@
+{
+  "name": "charging-station-management-api",
+  "version": "0.0.1",
+  "description": "API for an automated charging station management system.",
+  "main": "index.js",
+  "repository": "https://github.com/hostmepanda/charging-station-management-api.git",
+  "author": "hostmepanda <naoh.vite!@gmail.com>",
+  "license": "Apache"
+}
