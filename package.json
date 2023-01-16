@@ -8,8 +8,8 @@
   "license": "Apache",
   "scripts": {
     "build": "yarn tsc",
-    "start": "yarn build && ./node_modules/.bin/moleculer-runner --config ./build/config/moleculer.config.js ./build/**/*.service-schema.js",
-    "dev": "ts-node-dev ./node_modules/.bin/moleculer-runner --config ./src/config/moleculer.config.ts ./src/**/*.service-schema.ts"
+    "start": "yarn build && ./node_modules/.bin/moleculer-runner --config ./build/configs/moleculer.config.js ./build/**/*.service-schema.js",
+    "dev": "ts-node-dev ./node_modules/.bin/moleculer-runner --config ./src/configs/moleculer.config.ts ./src/**/*.service-schema.ts"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
