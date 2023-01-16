@@ -8,5 +8,8 @@
   "license": "Apache",
   "devDependencies": {
     "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "moleculer-web": "^0.10.5"
   }
 }
