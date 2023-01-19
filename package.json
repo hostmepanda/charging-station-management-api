@@ -19,6 +19,10 @@
   "dependencies": {
     "eslint": "^8.32.0",
     "moleculer": "^0.14.28",
-    "moleculer-web": "^0.10.5"
+    "moleculer-db": "^0.8.21",
+    "moleculer-db-adapter-sequelize": "^0.2.15",
+    "moleculer-web": "^0.10.5",
+    "sqlite": "^4.1.2",
+    "sqlite3": "^5.1.4"
   }
 }
