@@ -8,8 +8,8 @@
   "license": "Apache",
   "scripts": {
     "build": "yarn tsc",
-    "start": "yarn build && ./node_modules/.bin/moleculer-runner --config ./build/configs/moleculer.config.js ./build/**/*.service-schema.js",
-    "dev": "ts-node-dev ./node_modules/.bin/moleculer-runner --config ./src/configs/moleculer.config.ts ./src/**/*.service-schema.ts"
+    "start": "yarn build && ./node_modules/.bin/moleculer-runner --envfile .env --config ./build/configs/moleculer.config.js ./build/**/*.service-schema.js",
+    "dev": "ts-node-dev ./node_modules/.bin/moleculer-runner --envfile dev.env --config ./src/configs/moleculer.config.ts ./src/**/*.service-schema.ts"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
@@ -17,6 +17,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "dotenv": "^16.0.3",
     "eslint": "^8.32.0",
     "moleculer": "^0.14.28",
     "moleculer-db": "^0.8.21",

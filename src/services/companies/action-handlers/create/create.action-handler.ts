@@ -8,6 +8,6 @@ export const CreateActionHandler: ActionSchema = {
   async handler(this: ServiceSchema, ctx: Context<CreateHandlerParamsType>) {
     const { name } = ctx.params;
 
-    return this.create({ name });
+    return this.createCompany({ name });
   },
 };
