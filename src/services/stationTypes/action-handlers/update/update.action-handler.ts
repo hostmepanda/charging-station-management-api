@@ -11,7 +11,7 @@ export const UpdateActionHandler: ActionSchema = {
     before: beforeActionHandler,
   },
   async handler(ctx: Context<UpdateHandlerParamsType>) {
-    const { id, name } = ctx.params;
-    return this.updateStationType({ id: Number(id), name });
+    const { id, name, maxPower } = ctx.params;
+    return this.updateStationType({ id: Number(id), name, maxPower });
   },
 };

@@ -20,9 +20,9 @@ interface GetRecordParams {
 export class CompaniesDbStore extends DbStore {
   async createTable() {
     return this.store!.run(
-      `CREATE TABLE  IF NOT EXISTS companies (
+      `CREATE TABLE IF NOT EXISTS companies (
             id INTEGER PRIMARY KEY UNIQUE NOT NULL,
-            name STRING
+            name STRING NOT NULL
            )`,
     );
   }

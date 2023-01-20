@@ -4,11 +4,15 @@ import { UpdateHandlerParamsType } from './update.handler-params.type';
 import ValidationError = Moleculer.Errors.ValidationError;
 
 export const beforeActionHandler = (ctx: Context<UpdateHandlerParamsType>) => {
-  const { id } = ctx.params;
+  const { id, maxPower } = ctx.params;
 
-  const notValidNumber = isNaN(Number(id));
+  const idNotNumber = isNaN(Number(id));
+  const maxPowerNotNumber = isNaN(Number(maxPower));
 
-  if (notValidNumber) {
+  if (idNotNumber) {
     throw new ValidationError('id should be a valid number');
+  }
+  if (maxPowerNotNumber) {
+    throw new ValidationError('maxPower should be a valid number');
   }
 };

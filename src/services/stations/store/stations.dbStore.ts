@@ -20,9 +20,9 @@ interface GetRecordParams {
 export class StationsDbStore extends DbStore {
   async createTable() {
     return this.store!.run(
-      `CREATE TABLE  IF NOT EXISTS stations (
+      `CREATE TABLE IF NOT EXISTS stations (
             id INTEGER PRIMARY KEY UNIQUE NOT NULL,
-            name STRING
+            name STRING NOT NULL
            )`,
     );
   }
@@ -55,7 +55,7 @@ export class StationsDbStore extends DbStore {
 
   async listRecord() {
     return await this.store!.all(
-      'SELECT id, name FROM stations ORDER by name ASC',
+      'SELECT id, name FROM stations ORDER by id ASC',
     );
   }
 
@@ -63,8 +63,8 @@ export class StationsDbStore extends DbStore {
     const { id, name } = updateParams;
     return this.store!.run(
       `UPDATE stations SET name=(?) WHERE id=(?)`,
-      id,
       name,
+      id,
     );
   }
 }
