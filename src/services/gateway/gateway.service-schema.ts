@@ -12,6 +12,7 @@ export const GatewayServiceSchema: ServiceSchema = {
         whitelist: [
           'v1.companies.*',
           'v1.stations.*',
+          'v1.stationTypes.*',
         ],
         autoAliases: true,
       },
