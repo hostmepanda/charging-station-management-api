@@ -1,11 +1,11 @@
 import { ServiceSchema } from 'moleculer';
 
 import * as actionHandlers from './action-handlers';
-import { DbStoreMixin } from '../../storages/dbStore.mixin';
+import { CompaniesDbStoreMixin } from './store/companies.dbStore.mixin';
 
 export const CompaniesServiceSchema: ServiceSchema = {
   name: 'companies',
-  mixins: [DbStoreMixin],
+  mixins: [CompaniesDbStoreMixin],
   version: process.env.COMPANIES_SERVICE_VERSION ?? 1,
   settings: {
     port: process.env.COMPANIES_SERVICE_PORT ?? 3002,

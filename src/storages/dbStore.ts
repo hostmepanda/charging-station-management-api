@@ -11,11 +11,6 @@ interface DbStoreConstructorParams {
   databasePath?: string;
 }
 
-interface InsertRecordParams {
-  id: number;
-  name: string;
-}
-
 export class DbStore {
   databasePath: string
   logger: LoggerInterface
@@ -43,14 +38,5 @@ export class DbStore {
       );
       throw new Error(error.message);
     }
-  }
-
-  async insertRecord(insertParams: InsertRecordParams) {
-    const { id, name } = insertParams;
-    return this.store!.run(
-      'INSERT INTO companies (id, name) VALUES (?, ?)',
-      id,
-      name
-    );
   }
 }
