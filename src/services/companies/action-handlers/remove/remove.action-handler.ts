@@ -12,6 +12,6 @@ export const RemoveActionHandler: ActionSchema = {
   },
   async handler(ctx: Context<RemoveHandlerParamsType>) {
     const { id } = ctx.params;
-    return this.deleteCompany({ id });
+    return this.deleteCompany({ id: Number(id) });
   },
 };
