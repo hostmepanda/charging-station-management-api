@@ -1,31 +1,32 @@
 import { ServiceSchema } from 'moleculer';
-import { CompaniesDbStore } from './companies.dbStore';
+
+import { StationsDbStore } from './stations.dbStore';
 import { UpdateHandlerParamsType } from '../action-handlers/update/update.handler-params.type';
 
-const companiesDbPath = process.env.COMPANIES_DB_PATH ?? process.env.SERVICES_DB_PATH ?? ':memory:';
+const stationsDbPath = process.env.STATIONS_DB_PATH ?? process.env.SERVICES_DB_PATH ?? ':memory:';
 
-export const CompaniesDbStoreMixin:ServiceSchema = {
-  name: 'companies-db-store',
+export const StationsDbStoreMixin:ServiceSchema = {
+  name: 'stations-db-store',
   methods: {
-    async createCompany(createParams: { name: string }) {
+    async createStation(createParams: { name: string }) {
       return this.store.insertRecord(createParams);
     },
-    async deleteCompany(deleteParams: { id: number; }) {
+    async deleteStation(deleteParams: { id: number; }) {
       return this.store.deleteRecord(deleteParams);
     },
-    async getCompany(getParams: { id: number }) {
+    async getStation(getParams: { id: number }) {
       return this.store.getRecord(getParams);
     },
-    async listAllCompanies() {
+    async listAllStations() {
       return this.store.listRecord();
     },
-    async updateCompany(updateParams: UpdateHandlerParamsType) {
+    async updateStation(updateParams: UpdateHandlerParamsType) {
       return this.store.updateRecord(updateParams);
     },
   },
   async created() {
-    const dbStore = new CompaniesDbStore({
-      databasePath: companiesDbPath,
+    const dbStore = new StationsDbStore({
+      databasePath: stationsDbPath,
       logger: this.broker.logger,
     });
     await dbStore.connect();

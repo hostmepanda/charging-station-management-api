@@ -11,6 +11,7 @@ export const GatewayServiceSchema: ServiceSchema = {
         path: '/api',
         whitelist: [
           'v1.companies.*',
+          'v1.stations.*',
         ],
         autoAliases: true,
       },
