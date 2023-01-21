@@ -2,6 +2,8 @@ import { DbStore } from '../../../storages/dbStore';
 
 interface InsertRecordParams {
   name: string;
+  companyId: number;
+  stationTypeId: number;
 }
 
 interface DeleteRecordParams {
@@ -22,7 +24,9 @@ export class StationsDbStore extends DbStore {
     return this.store!.run(
       `CREATE TABLE IF NOT EXISTS stations (
             id INTEGER PRIMARY KEY UNIQUE NOT NULL,
-            name STRING NOT NULL
+            name STRING NOT NULL,
+            company_id INTEGER NOT NULL,
+            station_type_id INTEGER NOT NULL
            )`,
     );
   }
@@ -40,16 +44,23 @@ export class StationsDbStore extends DbStore {
     const { id } = getParams;
 
     return await this.store!.get(
-      `SELECT id, name FROM stations WHERE id=(?)`,
+      `SELECT id, name, companies.name, stationTypes.name, stationTypes.max_power FROM stations
+            INNER JOIN companies 
+            ON stationTypes.company_id =  companies.id
+            INNER JOIN stationTypes
+            ON stationTypes.station_type_id = stationTypes.id
+            WHERE id=(?)`,
       id,
     );
   }
 
   async insertRecord(insertParams: InsertRecordParams) {
-    const { name } = insertParams;
+    const { name, stationTypeId, companyId } = insertParams;
     return this.store!.run(
-      'INSERT INTO stations (name) VALUES (?)',
-      name
+      'INSERT INTO stations (name, company_id, station_type_id) VALUES (?, ?, ?)',
+      name,
+      companyId,
+      stationTypeId
     );
   }
 
