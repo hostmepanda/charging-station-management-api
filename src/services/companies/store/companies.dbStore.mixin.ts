@@ -1,4 +1,5 @@
 import { ServiceSchema } from 'moleculer';
+
 import { CompaniesDbStore } from './companies.dbStore';
 import { UpdateHandlerParamsType } from '../action-handlers/update/update.handler-params.type';
 
@@ -7,7 +8,7 @@ const companiesDbPath = process.env.COMPANIES_DB_PATH ?? process.env.SERVICES_DB
 export const CompaniesDbStoreMixin:ServiceSchema = {
   name: 'companies-db-store',
   methods: {
-    async createCompany(createParams: { name: string }) {
+    async createCompany(createParams: { name: string, parentId?: number }) {
       return this.store.insertRecord(createParams);
     },
     async deleteCompany(deleteParams: { id: number; }) {
@@ -27,6 +28,7 @@ export const CompaniesDbStoreMixin:ServiceSchema = {
     const dbStore = new CompaniesDbStore({
       databasePath: companiesDbPath,
       logger: this.broker.logger,
+      serviceName: this.name,
     });
     await dbStore.connect();
     this.store = dbStore;

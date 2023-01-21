@@ -28,6 +28,7 @@ export const StationTypesDbStoreMixin:ServiceSchema = {
     const dbStore = new StationTypesDbStore({
       databasePath: stationTypesDbPath,
       logger: this.broker.logger,
+      serviceName: this.name,
     });
     await dbStore.connect();
     this.store = dbStore;

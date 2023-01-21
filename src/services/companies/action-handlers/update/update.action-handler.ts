@@ -11,7 +11,13 @@ export const UpdateActionHandler: ActionSchema = {
     before: beforeActionHandler,
   },
   async handler(ctx: Context<UpdateHandlerParamsType>) {
-    const { id, name } = ctx.params;
-    return this.updateCompany({ id: Number(id), name });
+    const { id, name, parentId } = ctx.params;
+    const updateParams = {
+      id: Number(id),
+      name,
+      ...(parentId ? { parentId: Number(parentId) } : undefined),
+    };
+
+    return this.updateCompany(updateParams);
   },
 };

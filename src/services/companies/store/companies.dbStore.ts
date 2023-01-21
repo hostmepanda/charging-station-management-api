@@ -2,6 +2,7 @@ import { DbStore } from '../../../storages/dbStore';
 
 interface InsertRecordParams {
   name: string;
+  parentId?: number;
 }
 
 interface DeleteRecordParams {
@@ -11,6 +12,7 @@ interface DeleteRecordParams {
 interface UpdateRecordParams {
   id: number;
   name: string;
+  parentId?: number;
 }
 
 interface GetRecordParams {
@@ -22,7 +24,8 @@ export class CompaniesDbStore extends DbStore {
     return this.store!.run(
       `CREATE TABLE IF NOT EXISTS companies (
             id INTEGER PRIMARY KEY UNIQUE NOT NULL,
-            name STRING NOT NULL
+            name STRING NOT NULL,
+            parent_company_id INTEGER DEFAULT NULL
            )`,
     );
   }
@@ -46,25 +49,41 @@ export class CompaniesDbStore extends DbStore {
   }
 
   async insertRecord(insertParams: InsertRecordParams) {
-    const { name } = insertParams;
+    const { name, parentId } = insertParams;
     return this.store!.run(
-      'INSERT INTO companies (name) VALUES (?)',
-      name
+      'INSERT INTO companies (name, parent_company_id) VALUES (?, ?)',
+      name,
+      parentId
     );
   }
 
   async listRecord() {
     return await this.store!.all(
-      'SELECT id, name FROM companies ORDER by name ASC',
+      `SELECT company.id, company.name, company.parent_company_id
+            FROM companies company
+            LEFT JOIN companies parent
+            ON company.parent_company_id = parent.id 
+            ORDER by company.id ASC`,
     );
   }
 
   async updateRecord(updateParams: UpdateRecordParams) {
-    const { id, name } = updateParams;
-    return this.store!.run(
-      `UPDATE companies SET name=(?) WHERE id=(?)`,
-      id,
-      name,
-    );
+    const { id, name, parentId } = updateParams;
+
+    if (parentId) {
+      return this.store!.run(
+        `UPDATE companies SET name=(?), parent_company_id=(?) WHERE id=(?) `,
+        name,
+        parentId,
+        id
+      );
+    } else {
+      return this.store!.run(
+        `UPDATE companies SET name=(?) WHERE id=(?) `,
+        name,
+        id
+      );
+    }
+
   }
 }

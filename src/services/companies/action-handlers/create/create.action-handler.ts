@@ -6,8 +6,13 @@ export const CreateActionHandler: ActionSchema = {
   rest: 'POST /',
   params: CreateParamsSchema,
   async handler(this: ServiceSchema, ctx: Context<CreateHandlerParamsType>) {
-    const { name } = ctx.params;
+    const { name, parentId } = ctx.params;
 
-    return this.createCompany({ name });
+    const createParams = {
+      name,
+      ...(parentId ? { parentId } : undefined),
+    };
+
+    return this.createCompany(createParams);
   },
 };

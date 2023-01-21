@@ -9,17 +9,20 @@ interface LoggerInterface {
 interface DbStoreConstructorParams {
   logger?: LoggerInterface;
   databasePath?: string;
+  serviceName?: string | undefined;
 }
 
 export class DbStore {
   databasePath: string
   logger: LoggerInterface
   store: Database | null
+  serviceName: string | undefined
 
-  constructor({ logger = console, databasePath = ':memory:' }: DbStoreConstructorParams = {}) {
+  constructor({ logger = console, databasePath = ':memory:', serviceName }: DbStoreConstructorParams = {}) {
     this.databasePath = databasePath;
     this.logger = logger;
     this.store = null;
+    this.serviceName = serviceName;
   }
 
   async connect() {
@@ -29,12 +32,12 @@ export class DbStore {
         driver: sqliteDriver.Database,
       });
       this.logger.info(
-        'Connected to DB successfully',
+        `Connected to ${this.serviceName ?? ''} DB successfully`.trim(),
       );
     } catch (error: any) {
       this.logger.error(
         'Error happened during connecting to database',
-        { error },
+        { error, serviceName: this.serviceName },
       );
       throw new Error(error.message);
     }
