@@ -4,8 +4,7 @@ import { CreateParamsSchema } from './create.params-schema';
 import { CreateHandlerParamsType } from './create.handler-params.type';
 import { beforeActionHandler } from './before.hook';
 
-export const CreateActionHandler: ActionSchema = {
-  rest: 'POST /',
+export const create: ActionSchema = {
   params: CreateParamsSchema,
   hooks: {
     before: beforeActionHandler,

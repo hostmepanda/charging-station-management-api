@@ -1,5 +1,5 @@
-export { CreateActionHandler } from './create/create.action-handler';
-export { GetActionHandler } from './get/get.action-handler';
-export { ListActionHandler } from './list/list.action-handler';
-export { RemoveActionHandler } from './remove/remove.action-handler';
-export { UpdateActionHandler } from './update/update.action-handler';
+export { create } from './create/create.action-handler';
+export { get } from './get/get.action-handler';
+export { list } from './list/list.action-handler';
+export { remove } from './remove/remove.action-handler';
+export { update } from './update/update.action-handler';

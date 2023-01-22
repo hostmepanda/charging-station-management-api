@@ -4,8 +4,7 @@ import { UpdateHandlerParamsType } from './update.handler-params.type';
 import { beforeActionHandler } from './before.hook';
 import { updateParamsSchema } from './update.params-schema';
 
-export const UpdateActionHandler: ActionSchema = {
-  rest: 'PUT /:id',
+export const update: ActionSchema = {
   params: updateParamsSchema,
   hooks: {
     before: beforeActionHandler,

@@ -4,8 +4,7 @@ import { GetHandlerParamsType } from './get.handler-params.type';
 import { getParamsSchema } from './get.params-schema';
 import { beforeActionHandler } from './before.hook';
 
-export const GetActionHandler: ActionSchema = {
-  rest: 'GET /:id',
+export const get: ActionSchema = {
   params: getParamsSchema,
   hooks: {
     before: beforeActionHandler,

@@ -4,8 +4,7 @@ import { removeParamsSchema } from './remove.params-schema';
 import { RemoveHandlerParamsType } from './remove.handler-params.type';
 import { beforeActionHandler } from './before.hook';
 
-export const RemoveActionHandler: ActionSchema = {
-  rest: 'DELETE /:id',
+export const remove: ActionSchema = {
   params: removeParamsSchema,
   hooks: {
     before: beforeActionHandler,
