@@ -2,6 +2,7 @@ import { ServiceSchema } from 'moleculer';
 
 import { StationsDbStore } from './stations.dbStore';
 import { UpdateHandlerParamsType } from '../action-handlers/update/update.handler-params.type';
+import { listByStationType } from '../action-handlers/listByStationType/listByStationType.action-handler';
 
 const stationsDbPath = process.env.STATIONS_DB_PATH ?? process.env.SERVICES_DB_PATH ?? ':memory:';
 
@@ -19,6 +20,9 @@ export const StationsDbStoreMixin:ServiceSchema = {
     },
     async listAllStations() {
       return this.store.listRecord();
+    },
+    async listByStationType(id: number) {
+      return this.store.listRecordsByStationType(id);
     },
     async listCompanyStations(id: number) {
       return this.store.listRecordsByCompanyId(id);
