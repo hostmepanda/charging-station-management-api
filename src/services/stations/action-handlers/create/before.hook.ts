@@ -1,10 +1,11 @@
 import { Context } from 'moleculer';
 
+import { throwIfCompanyIdNotExist } from '../../../../globalHelpers';
+
 import { CreateHandlerParamsType } from './create.handler-params.type';
 import {
   checkCompanyId,
   checkStationTypeId,
-  throwIfCompanyIdNotExist,
   throwIfStationTypeIdNotExist,
 } from '../helpers';
 

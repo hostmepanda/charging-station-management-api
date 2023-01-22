@@ -18,31 +18,6 @@ export const checkStationTypeId = (stationTypeId: string | number) => {
   }
 };
 
-export const throwIfCompanyIdNotExist = async function (ctx: Context, companyId: number) {
-  try {
-    const foundCompany = await ctx.broker.call('v1.companies.get', { id: companyId });
-    if (!foundCompany) {
-      ctx.broker.logger.error(
-        'Can not find company by its id',
-        { companyId },
-      );
-      throw new ValidationError(
-        `Provided companyId doesn't match any existing company`,
-      );
-    }
-  } catch (error: unknown) {
-    const caughtError = error as { type: string; message: string };
-
-    if (caughtError?.type === 'VALIDATION_ERROR') {
-      throw error;
-    } else {
-      throw new Moleculer.Errors.MoleculerError(
-        `Error happened during processing the request`,
-      );
-    }
-  }
-};
-
 export const throwIfStationTypeIdNotExist = async (ctx: Context, stationTypeId: number) => {
   try {
     const foundStationType = await ctx.broker.call('v1.stationTypes.get', { id: stationTypeId });
@@ -68,4 +43,3 @@ export const throwIfStationTypeIdNotExist = async (ctx: Context, stationTypeId: 
     }
   }
 };
-

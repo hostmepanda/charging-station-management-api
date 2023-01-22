@@ -43,7 +43,7 @@ export class CompaniesDbStore extends DbStore {
     const { id } = getParams;
 
     return await this.store!.get(
-      `SELECT id, name FROM companies WHERE id=(?)`,
+      `SELECT id, name, parent_company_id FROM companies WHERE id=(?)`,
       id,
     );
   }
