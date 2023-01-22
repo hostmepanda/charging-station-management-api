@@ -9,5 +9,8 @@ export const beforeActionHandler = (ctx: Context<UpdateHandlerParamsType>) => {
   const { id, maxPower } = ctx.params;
 
   checkId(id);
-  checkMaxPower(maxPower);
+
+  if (maxPower) {
+    checkMaxPower(maxPower);
+  }
 };

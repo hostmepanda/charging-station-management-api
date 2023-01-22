@@ -10,7 +10,13 @@ export const update: ActionSchema = {
     before: beforeActionHandler,
   },
   async handler(ctx: Context<UpdateHandlerParamsType>) {
-    const { id, name } = ctx.params;
-    return this.updateStation({ id: Number(id), name });
+    const { companyId, id, name, stationTypeId } = ctx.params;
+    const updateParams = {
+      companyId: Number(companyId),
+      id: Number(id),
+      name,
+      stationTypeId: Number(stationTypeId),
+    };
+    return this.updateStation(updateParams);
   },
 };

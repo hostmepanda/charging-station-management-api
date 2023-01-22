@@ -12,7 +12,7 @@ interface DeleteRecordParams {
 
 interface UpdateRecordParams {
   id: number;
-  name: string;
+  name?: string;
   companyId?: number;
   stationTypeId?: number;
 }
@@ -75,10 +75,27 @@ export class StationsDbStore extends DbStore {
   async updateRecord(updateParams: UpdateRecordParams) {
     const { companyId, id, name, stationTypeId } = updateParams;
 
-    return this.store!.run(
-      `UPDATE stations SET name=(?) WHERE id=(?)`,
-      name,
-      id,
-    );
+    // TODO: extract to query builders
+    if (companyId) {
+      await this.store!.run(
+        `UPDATE stations SET company_id=(?) WHERE id=(?)`,
+        companyId,
+        id,
+      );
+    }
+    if (stationTypeId) {
+      await this.store!.run(
+        `UPDATE stations SET station_type_id=(?) WHERE id=(?)`,
+        stationTypeId,
+        id,
+      );
+    }
+    if (name) {
+      await this.store!.run(
+        `UPDATE stations SET name=(?) WHERE id=(?)`,
+        name,
+        id,
+      );
+    }
   }
 }

@@ -8,4 +8,8 @@ export const checkMaxPower = (maxPower: string | number) => {
   if (maxPowerNotNumber) {
     throw new ValidationError('maxPower should be a valid number');
   }
+
+  if (maxPower <= 0) {
+    throw new ValidationError('maxPower should be a greater 0');
+  }
 };

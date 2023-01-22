@@ -18,7 +18,7 @@ export const checkStationTypeId = (stationTypeId: string | number) => {
   }
 };
 
-export const throwIfStationTypeIdNotExist = async (ctx: Context, stationTypeId: number) => {
+export const throwIfStationTypeIdNotExist = async (ctx: Context, stationTypeId: number | string) => {
   try {
     const foundStationType = await ctx.broker.call('v1.stationTypes.get', { id: stationTypeId });
 
