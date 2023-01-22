@@ -11,6 +11,7 @@ export const GatewayServiceSchema: ServiceSchema = {
         aliases: {
           'GET companies': 'v1.companies.list',
           'GET companies/:id': 'v1.companies.get',
+          'GET companies/:id/stations': 'v1.companies.listChildrenStations',
           'POST companies': 'v1.companies.create',
           'DELETE companies/:id': 'v1.companies.remove',
           'PUT companies/:id': 'v1.companies.update',

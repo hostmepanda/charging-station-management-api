@@ -77,6 +77,21 @@ export class CompaniesDbStore extends DbStore {
     );
   }
 
+  async listRecordsWithPopulate(companyId: number) {
+    return await this.store!.all(
+      `SELECT stations.id as stationId, stations.name as stationName, stationTypes.max_power as maxPower
+            FROM stations 
+            LEFT JOIN stationTypes
+            ON stations.station_type_id=stationTypes.id
+            WHERE company_id
+            IN (SELECT id FROM companies WHERE id=(?) OR parent_company_id=(?))
+            ORDER BY stationId ASC
+            `,
+      companyId,
+      companyId,
+    );
+  }
+
   async updateRecord(updateParams: UpdateRecordParams) {
     const { id, name, parentId } = updateParams;
 
