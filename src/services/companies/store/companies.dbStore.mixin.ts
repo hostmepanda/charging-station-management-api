@@ -20,6 +20,9 @@ export const CompaniesDbStoreMixin:ServiceSchema = {
     async listAllCompanies() {
       return this.store.listRecord();
     },
+    async listChildren(parentId) {
+      return this.store.listRecordByParentCompanyId(parentId);
+    },
     async updateCompany(updateParams: UpdateHandlerParamsType) {
       return this.store.updateRecord(updateParams);
     },

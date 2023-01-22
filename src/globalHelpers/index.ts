@@ -36,3 +36,33 @@ export const throwIfCompanyIdNotExist = async function (ctx: Context, companyId:
     }
   }
 };
+
+export const throwIfCompanyHasChildren = async (ctx: Context, companyId: string | number) => {
+  try {
+    const companyChildren: {
+      id: number;
+      name: string;
+      parent_company_id?: number;
+    }[] = await ctx.broker.call('v1.companies.listChildren', { id: Number(companyId) });
+
+    if (companyChildren.length > 0) {
+      ctx.broker.logger.error(
+        'Can not process the operation, company has a child or children',
+        { companyId, childrenCount: companyChildren.length },
+      );
+      throw new ValidationError(
+        'Can not process the operation, company has one or several dependent companies'
+      );
+    }
+  } catch (error: unknown) {
+    const caughtError = error as { type: string; message: string };
+
+    if (caughtError?.type === 'VALIDATION_ERROR') {
+      throw error;
+    } else {
+      throw new Moleculer.Errors.MoleculerError(
+        `Error happened during processing the request`,
+      );
+    }
+  }
+};

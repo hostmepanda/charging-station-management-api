@@ -67,23 +67,41 @@ export class CompaniesDbStore extends DbStore {
     );
   }
 
+  async listRecordByParentCompanyId(parentId: string) {
+    return await this.store!.all(
+      `SELECT id, name, parent_company_id
+            FROM companies
+            WHERE parent_company_id=(?)
+            ORDER by id ASC`,
+      parentId,
+    );
+  }
+
   async updateRecord(updateParams: UpdateRecordParams) {
     const { id, name, parentId } = updateParams;
 
-    if (parentId) {
+    // TODO: extract to query builders
+    if (parentId && name) {
       return this.store!.run(
         `UPDATE companies SET name=(?), parent_company_id=(?) WHERE id=(?) `,
         name,
         parentId,
         id
       );
-    } else {
+    }
+    if (parentId) {
+      return this.store!.run(
+        `UPDATE companies SET parent_company_id=(?) WHERE id=(?) `,
+        parentId,
+        id
+      );
+    }
+    if (name) {
       return this.store!.run(
         `UPDATE companies SET name=(?) WHERE id=(?) `,
         name,
         id
       );
     }
-
   }
 }

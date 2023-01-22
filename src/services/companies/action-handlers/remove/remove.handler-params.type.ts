@@ -1,3 +1,3 @@
 export type RemoveHandlerParamsType = {
-  id: string;
+  id: string | number;
 };
