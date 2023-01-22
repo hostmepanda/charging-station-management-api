@@ -1,10 +1,11 @@
 import { Context } from 'moleculer';
 
 import { CreateHandlerParamsType } from './create.handler-params.type';
-import { checkParentId } from '../helpers';
+import { checkCompanyId, checkStationTypeId } from '../helpers';
 
 export const beforeActionHandler = (ctx: Context<CreateHandlerParamsType>) => {
-  const { parentId } = ctx.params;
+  const { companyId, stationTypeId } = ctx.params;
 
-  checkParentId(parentId);
+  checkCompanyId(companyId);
+  checkStationTypeId(stationTypeId);
 };

@@ -13,6 +13,8 @@ interface DeleteRecordParams {
 interface UpdateRecordParams {
   id: number;
   name: string;
+  companyId?: number;
+  stationTypeId?: number;
 }
 
 interface GetRecordParams {
@@ -66,12 +68,13 @@ export class StationsDbStore extends DbStore {
 
   async listRecord() {
     return await this.store!.all(
-      'SELECT id, name FROM stations ORDER by id ASC',
+      'SELECT id, name, company_id, station_type_id FROM stations ORDER by id ASC',
     );
   }
 
   async updateRecord(updateParams: UpdateRecordParams) {
-    const { id, name } = updateParams;
+    const { companyId, id, name, stationTypeId } = updateParams;
+
     return this.store!.run(
       `UPDATE stations SET name=(?) WHERE id=(?)`,
       name,

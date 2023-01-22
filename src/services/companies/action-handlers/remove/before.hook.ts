@@ -1,13 +1,10 @@
-import Moleculer, { Context } from 'moleculer';
-import { RemoveHandlerParamsType } from './remove.handler-params.type';
+import { Context } from 'moleculer';
 
-import ValidationError = Moleculer.Errors.ValidationError;
+import { RemoveHandlerParamsType } from './remove.handler-params.type';
+import { checkId } from '../../../../globalHelpers';
 
 export const beforeActionHandler = (ctx: Context<RemoveHandlerParamsType>) => {
   const { id } = ctx.params;
-  const notValidNumber = isNaN(Number(id));
 
-  if (notValidNumber) {
-    throw new ValidationError('id should be a valid number');
-  }
+  checkId(id);
 };
