@@ -72,6 +72,16 @@ export class StationsDbStore extends DbStore {
     );
   }
 
+  async listRecordsByCompanyId(companyId: number) {
+    return await this.store!.all(
+      `SELECT id, name, company_id, station_type_id
+            FROM stations
+            WHERE company_id=(?)
+            ORDER BY id ASC`,
+      companyId,
+    );
+  }
+
   async updateRecord(updateParams: UpdateRecordParams) {
     const { companyId, id, name, stationTypeId } = updateParams;
 

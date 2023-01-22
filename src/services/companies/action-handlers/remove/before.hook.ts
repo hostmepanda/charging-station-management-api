@@ -1,6 +1,6 @@
 import { Context } from 'moleculer';
 
-import { checkId, throwIfCompanyHasChildren } from '../../../../globalHelpers';
+import { checkId, throwIfCompanyHasChildren, throwIfCompanyHasStations } from '../../../../globalHelpers';
 
 import { RemoveHandlerParamsType } from './remove.handler-params.type';
 
@@ -9,4 +9,5 @@ export const beforeActionHandler = async (ctx: Context<RemoveHandlerParamsType>)
 
   checkId(id);
   await throwIfCompanyHasChildren(ctx, id);
+  await throwIfCompanyHasStations(ctx, id);
 };

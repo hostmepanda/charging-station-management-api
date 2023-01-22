@@ -13,6 +13,4 @@ export const beforeActionHandler = async (ctx: Context<CreateHandlerParamsType>)
 
   checkParentId(parentId);
   await throwIfCompanyIdNotExist(ctx, parentId);
-
-  // TODO: check if company has assigned stations
 };

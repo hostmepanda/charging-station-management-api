@@ -20,6 +20,9 @@ export const StationsDbStoreMixin:ServiceSchema = {
     async listAllStations() {
       return this.store.listRecord();
     },
+    async listCompanyStations(id: number) {
+      return this.store.listRecordsByCompanyId(id);
+    },
     async updateStation(updateParams: UpdateHandlerParamsType) {
       return this.store.updateRecord(updateParams);
     },
