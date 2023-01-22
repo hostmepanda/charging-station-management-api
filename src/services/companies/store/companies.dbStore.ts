@@ -80,8 +80,10 @@ export class CompaniesDbStore extends DbStore {
   async updateRecord(updateParams: UpdateRecordParams) {
     const { id, name, parentId } = updateParams;
 
+    const shouldUpdateParentId = parentId || parentId === null;
+
     // TODO: extract to query builders
-    if (parentId && name) {
+    if (shouldUpdateParentId && name) {
       return this.store!.run(
         `UPDATE companies SET name=(?), parent_company_id=(?) WHERE id=(?) `,
         name,
@@ -89,7 +91,7 @@ export class CompaniesDbStore extends DbStore {
         id
       );
     }
-    if (parentId) {
+    if (shouldUpdateParentId) {
       return this.store!.run(
         `UPDATE companies SET parent_company_id=(?) WHERE id=(?) `,
         parentId,

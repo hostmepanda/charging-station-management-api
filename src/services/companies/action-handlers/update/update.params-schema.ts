@@ -1,5 +1,5 @@
 export const updateParamsSchema = {
   id: 'string',
-  name: 'string',
-  parentId: { type: 'string', optional: true },
+  name: { type: 'string', optional: true },
+  parentId: { type: 'string', optional: true, nullable: true },
 };

@@ -11,10 +11,21 @@ export const update: ActionSchema = {
   },
   async handler(ctx: Context<UpdateHandlerParamsType>) {
     const { id, name, parentId } = ctx.params;
+    let updateParentId;
+
+    const isParentIdNull = parentId === 'null';
+    const shouldUpdateParentId = isParentIdNull || parentId;
+
+    if (shouldUpdateParentId && isParentIdNull) {
+      updateParentId = { parentId: null };
+    } else {
+      updateParentId = { parentId: Number(parentId) };
+    }
+
     const updateParams = {
       id: Number(id),
       name,
-      ...(parentId ? { parentId: Number(parentId) } : undefined),
+      ...(shouldUpdateParentId ? updateParentId : undefined),
     };
 
     return this.updateCompany(updateParams);
