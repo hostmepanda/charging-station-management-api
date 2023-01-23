@@ -1,7 +1,7 @@
 import Moleculer from 'moleculer';
 import ValidationError = Moleculer.Errors.ValidationError;
 
-import { Id } from '../../../../globalHelpers';
+import { Id } from '../../../globalHelpers';
 
 type ParentId = string | number | undefined;
 

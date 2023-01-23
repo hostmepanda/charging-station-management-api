@@ -7,7 +7,7 @@ import {
   checkCompanyId,
   checkStationTypeId,
   throwIfStationTypeIdNotExist,
-} from '../helpers';
+} from '../../helpers';
 
 export async function beforeActionHandler(ctx: Context<CreateHandlerParamsType>) {
   const { companyId, stationTypeId } = ctx.params;

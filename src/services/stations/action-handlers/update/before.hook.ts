@@ -2,7 +2,7 @@ import { Context } from 'moleculer';
 
 import { checkId, throwIfCompanyIdNotExist } from '../../../../globalHelpers';
 import { UpdateHandlerParamsType } from './update.handler-params.type';
-import { checkCompanyId, checkStationTypeId, throwIfStationTypeIdNotExist } from '../helpers';
+import { checkCompanyId, checkStationTypeId, throwIfStationTypeIdNotExist } from '../../helpers';
 
 export const beforeActionHandler = async (ctx: Context<UpdateHandlerParamsType>) => {
   const { id, companyId, stationTypeId } = ctx.params;

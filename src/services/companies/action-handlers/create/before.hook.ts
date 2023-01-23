@@ -1,7 +1,7 @@
 import { Context } from 'moleculer';
 
 import { CreateHandlerParamsType } from './create.handler-params.type';
-import { checkParentId } from '../helpers';
+import { checkParentId } from '../../helpers';
 import { throwIfCompanyIdNotExist } from '../../../../globalHelpers';
 
 export const beforeActionHandler = async (ctx: Context<CreateHandlerParamsType>) => {
