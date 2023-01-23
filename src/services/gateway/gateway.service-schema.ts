@@ -11,8 +11,8 @@ export const GatewayServiceSchema: ServiceSchema = {
         path: '/api/charger',
         mergeParams: false,
         aliases: {
-          'GET /:id': 'v1.charger.getChargeTask',
-          'POST /': 'v1.charger.parse',
+          'GET tasks/:id': 'v1.charger.getChargeTask',
+          'POST tasks': 'v1.charger.parseTask',
         },
         bodyParsers: {
           text: true,

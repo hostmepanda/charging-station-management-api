@@ -1,2 +1,3 @@
 export { getChargeTask } from './getChargeTask/getChargeTask.action-handler';
-export { parse } from './parse/parse.action-handler';
+export { parseTask } from './parseTask/parseTask.action-handler';
+export { startTask } from './startTask/startTask.action-handler';

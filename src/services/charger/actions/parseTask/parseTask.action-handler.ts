@@ -2,6 +2,7 @@ import Moleculer, { ActionSchema, Context } from 'moleculer';
 import ValidationError = Moleculer.Errors.ValidationError;
 
 import { StepCommand } from '../../types';
+import { ChargeEvents } from '../../constants';
 
 type CommandValidationError = { errorMessage: string; commandLine: string; commandLineNumber: number; };
 
@@ -14,7 +15,7 @@ const BEGIN_COMMAND = 'Begin';
 const END_COMMAND = 'End';
 const COMMAND_SEPARATOR = ' ';
 
-export const parse: ActionSchema = {
+export const parseTask: ActionSchema = {
   hooks: {
     before: (ctx: Context<ParseParams>) => {
       const { body: rawInputCommands } = ctx.params;
@@ -45,6 +46,7 @@ export const parse: ActionSchema = {
       stepCommands.push({
         step: inputCommandsList.at(0) as string,
         param: null,
+        index: 0,
       });
 
       inputCommandsList.slice(1, inputCommandsList.length - 1).forEach(
@@ -73,6 +75,7 @@ export const parse: ActionSchema = {
             stepCommands.push({
               step: START_STATION_COMMAND,
               param: isNaN(Number(inputValue)) ? inputValue : Number(inputValue),
+              index: index + 1,
             });
           }
 
@@ -82,6 +85,7 @@ export const parse: ActionSchema = {
             stepCommands.push({
               step: STOP_STATION_COMMAND,
               param: isNaN(Number(inputValue)) ? inputValue : Number(inputValue),
+              index: index + 1,
             });
           }
 
@@ -91,6 +95,7 @@ export const parse: ActionSchema = {
             stepCommands.push({
               step: WAIT_STATION_COMMAND,
               param: Number(inputValue),
+              index: index + 1,
             });
           }
 
@@ -125,13 +130,14 @@ export const parse: ActionSchema = {
           {
             step: inputCommandsList.at(-1) as string,
             param: null,
+            index: inputCommandsList.length - 1,
           },
         ],
       };
     },
     after: (ctx: Context<ParseParams, { [key:string]: unknown; }>) => {
       ctx.meta.$statusCode = 201;
-      ctx.meta.$location = `GET /api/charger/${ctx.params.id}`;
+      ctx.meta.$location = `GET /api/charger/tasks/${ctx.params.id}`;
       ctx.meta.$responseType = 'application/json';
 
       return {
@@ -142,8 +148,12 @@ export const parse: ActionSchema = {
   },
   async handler(ctx: Context<ParseParams>) {
     const { body: rawScript, steps } = ctx.params;
-    ctx.broker.logger.info(steps);
-    const { lastID: scriptId } = await this.addStepsFromScript({ steps, rawScript });
-    ctx.params.id = scriptId;
+
+    const addStepsParams = { steps, rawScript, activeStepIndex: 0, nextStepIndex: 1 };
+    const { lastID: taskId } = await this.addStepsFromScript(addStepsParams);
+
+    ctx.params.id = taskId;
+
+    await ctx.emit(ChargeEvents.NewTaskCreated, { taskId });
   },
 };

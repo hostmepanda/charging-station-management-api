@@ -1,6 +1,6 @@
 import { ServiceSchema } from 'moleculer';
 
-import { StepCommand } from '../types';
+import { StepParams, TaskId } from '../types';
 import { ChargerDbStore } from './charger.dbStore';
 
 const stationsDbPath = process.env.CHARGER_DB_PATH ?? process.env.SERVICES_DB_PATH ?? ':memory:';
@@ -8,8 +8,19 @@ const stationsDbPath = process.env.CHARGER_DB_PATH ?? process.env.SERVICES_DB_PA
 export const ChargerDbStoreMixin:ServiceSchema = {
   name: 'charger-db-store',
   methods: {
-    async addStepsFromScript(createParams: { steps: StepCommand[], rawScript: string; }) {
+    async addStepsFromScript(createParams: StepParams) {
       return this.store.insertRecord(createParams);
+    },
+    async getTaskById(taskId: TaskId) {
+      const chargeTask = await this.store.getRecordById(taskId);
+
+      return {
+        ...chargeTask,
+        steps: JSON.parse(chargeTask.steps),
+      };
+    },
+    async updateTask(updateParams: StepParams) {
+      return this.store.updateRecord(updateParams);
     },
   },
   async created() {
