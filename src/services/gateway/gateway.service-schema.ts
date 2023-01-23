@@ -8,6 +8,20 @@ export const GatewayServiceSchema: ServiceSchema = {
     port: process.env.GATEWAY_SERVICE_PORT ?? 3000,
     routes: [
       {
+        path: '/api/charger',
+        mergeParams: false,
+        aliases: {
+          'GET /': 'v1.charger.currentStatus',
+          'POST /': 'v1.charger.parse',
+        },
+        bodyParsers: {
+          text: true,
+        },
+        whitelist: [
+          'v1.charger.*',
+        ],
+      },
+      {
         aliases: {
           'GET companies': 'v1.companies.list',
           'GET companies/:id': 'v1.companies.get',
