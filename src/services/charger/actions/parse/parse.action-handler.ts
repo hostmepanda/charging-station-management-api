@@ -1,8 +1,11 @@
 import Moleculer, { ActionSchema, Context } from 'moleculer';
 import ValidationError = Moleculer.Errors.ValidationError;
 
-type ParseParams = { body: string; inputCommandsList: string[]; };
+import { StepCommand } from '../../types';
+
 type CommandValidationError = { errorMessage: string; commandLine: string; commandLineNumber: number; };
+
+type ParseParams = { body: string; steps: StepCommand[]; id?: string; };
 
 const START_STATION_COMMAND = 'Start station';
 const STOP_STATION_COMMAND = 'Stop station';
@@ -18,6 +21,7 @@ export const parse: ActionSchema = {
 
       let isContainIllegalCommands: CommandValidationError[] = [];
       let isContainIllegalCommandValue: CommandValidationError[] = [];
+      let stepCommands: StepCommand[] = [];
       let isAllowedInputValue: boolean = false;
 
       const inputCommandsList = rawInputCommands.split('\n');
@@ -37,6 +41,11 @@ export const parse: ActionSchema = {
           `${!isEndWithEnd ? 'end with ' + END_COMMAND : ''}`.trim(),
         );
       }
+
+      stepCommands.push({
+        step: inputCommandsList.at(0) as string,
+        param: null,
+      });
 
       inputCommandsList.slice(1, inputCommandsList.length - 1).forEach(
         (commandLine, index) => {
@@ -61,16 +70,28 @@ export const parse: ActionSchema = {
           if (isStartStation) {
             ([, inputValue] = commandLine.split(`${START_STATION_COMMAND}${COMMAND_SEPARATOR}`));
             isAllowedInputValue = inputValue === 'all' || (!isNaN(Number(inputValue)) && Number(inputValue) >= 0);
+            stepCommands.push({
+              step: START_STATION_COMMAND,
+              param: isNaN(Number(inputValue)) ? inputValue : Number(inputValue),
+            });
           }
 
           if (isStopStation) {
             ([, inputValue] = commandLine.split(`${STOP_STATION_COMMAND}${COMMAND_SEPARATOR}`));
             isAllowedInputValue = inputValue === 'all' || (!isNaN(Number(inputValue)) && Number(inputValue) >= 0);
+            stepCommands.push({
+              step: STOP_STATION_COMMAND,
+              param: isNaN(Number(inputValue)) ? inputValue : Number(inputValue),
+            });
           }
 
           if (isWait) {
             ([, inputValue] = commandLine.split(`${WAIT_STATION_COMMAND}${COMMAND_SEPARATOR}`));
             isAllowedInputValue = !isNaN(Number(inputValue)) && Number(inputValue) >= 0;
+            stepCommands.push({
+              step: WAIT_STATION_COMMAND,
+              param: Number(inputValue),
+            });
           }
 
           if (!isAllowedInputValue) {
@@ -99,16 +120,30 @@ export const parse: ActionSchema = {
 
       ctx.params = {
         ...ctx.params,
-        inputCommandsList,
+        steps: [
+          ...stepCommands,
+          {
+            step: inputCommandsList.at(-1) as string,
+            param: null,
+          },
+        ],
       };
     },
-    after: (ctx: Context<unknown, { $statusCode: unknown; $location: unknown }>) => {
+    after: (ctx: Context<ParseParams, { [key:string]: unknown; }>) => {
       ctx.meta.$statusCode = 201;
-      ctx.meta.$location = 'GET /api/charger/current-status';
+      ctx.meta.$location = `GET /api/charger/${ctx.params.id}`;
+      ctx.meta.$responseType = 'application/json';
+
+      return {
+        parsed: true,
+        taskId: ctx.params.id,
+      };
     },
   },
   async handler(ctx: Context<ParseParams>) {
-    const { inputCommandsList } = ctx.params;
-    ctx.broker.logger.info(inputCommandsList);
+    const { body: rawScript, steps } = ctx.params;
+    ctx.broker.logger.info(steps);
+    const { lastID: scriptId } = await this.addStepsFromScript({ steps, rawScript });
+    ctx.params.id = scriptId;
   },
 };

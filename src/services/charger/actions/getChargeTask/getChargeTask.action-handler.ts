@@ -4,5 +4,6 @@ export const getChargeTask: ActionSchema = {
   async handler(ctx: Context<{ id: string; }>) {
     const { id: taskId } = ctx.params;
 
+    return this.getTaskById(taskId);
   },
 };
