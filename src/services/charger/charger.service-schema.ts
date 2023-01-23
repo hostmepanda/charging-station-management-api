@@ -2,7 +2,7 @@ import { Context, ServiceSchema } from 'moleculer';
 
 import * as actionHandlers from './actions';
 import { ChargerDbStoreMixin } from './store/charger.dbStore.mixin';
-import { ChargeEvents } from './constants';
+import { ChargeEvent } from './constants';
 
 export const ChargerServiceSchema: ServiceSchema = {
   name: 'charger',
@@ -12,9 +12,15 @@ export const ChargerServiceSchema: ServiceSchema = {
     port: process.env.CHARGER_SERVICE_PORT ?? 3005,
   },
   events: {
-    async [ChargeEvents.NewTaskCreated](ctx: Context<{ taskId: number; }>) {
+    async [ChargeEvent.NewTaskCreated](ctx: Context<{ taskId: number; }>) {
       const { taskId } = ctx.params;
+
       await ctx.broker.call('v1.charger.startTask', { taskId });
+    },
+    async [ChargeEvent.ProcessNextStep](ctx: Context<{ taskId: number; }>) {
+      const { taskId } = ctx.params;
+
+      await ctx.broker.call('v1.charger.processNextStep', { taskId });
     },
   },
   actions: actionHandlers,

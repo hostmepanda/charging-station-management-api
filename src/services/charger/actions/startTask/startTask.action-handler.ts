@@ -1,7 +1,7 @@
 import { ActionSchema, Context } from 'moleculer';
 
 import { startTaskParamsSchema } from './startTask.params-schema';
-import { ChargeEvents } from '../../constants';
+import { ChargeEvent } from '../../constants';
 
 export const startTask: ActionSchema = {
   params: startTaskParamsSchema,
@@ -29,6 +29,6 @@ export const startTask: ActionSchema = {
       taskId,
     };
     await this.updateTask(updateTaskParams);
-    await ctx.emit(ChargeEvents.ProcessNextTask, { taskId });
+    await ctx.emit(ChargeEvent.ProcessNextStep, { taskId });
   },
 };

@@ -2,17 +2,13 @@ import Moleculer, { ActionSchema, Context } from 'moleculer';
 import ValidationError = Moleculer.Errors.ValidationError;
 
 import { StepCommand } from '../../types';
-import { ChargeEvents } from '../../constants';
+import { ChargeEvent } from '../../constants';
+import { ChargeCommandEnum } from '../../constants/chargeCommand.enum';
 
 type CommandValidationError = { errorMessage: string; commandLine: string; commandLineNumber: number; };
 
 type ParseParams = { body: string; steps: StepCommand[]; id?: string; };
 
-const START_STATION_COMMAND = 'Start station';
-const STOP_STATION_COMMAND = 'Stop station';
-const WAIT_STATION_COMMAND = 'Wait';
-const BEGIN_COMMAND = 'Begin';
-const END_COMMAND = 'End';
 const COMMAND_SEPARATOR = ' ';
 
 export const parseTask: ActionSchema = {
@@ -27,19 +23,19 @@ export const parseTask: ActionSchema = {
 
       const inputCommandsList = rawInputCommands.split('\n');
 
-      const isStartWithBegin = inputCommandsList.at(0) === BEGIN_COMMAND;
-      const isEndWithEnd = inputCommandsList.at(-1) === END_COMMAND;
+      const isStartWithBegin = inputCommandsList.at(0) === ChargeCommandEnum.Begin;
+      const isEndWithEnd = inputCommandsList.at(-1) === ChargeCommandEnum.End;
       const isCorrectStartEnd = isStartWithBegin && isEndWithEnd;
 
       if (!isCorrectStartEnd) {
         ctx.broker.logger.error(
-          `Script parsing failed due to wrong front ${BEGIN_COMMAND} / ${END_COMMAND} commands`,
+          `Script parsing failed due to wrong front ${ChargeCommandEnum.Begin} / ${ChargeCommandEnum.End} commands`,
           { isStartWithBegin, isEndWithEnd, isCorrectStartEnd },
         );
         throw new ValidationError(
           'Error happened while parsing script. Script must ' +
-          `${!isStartWithBegin ? 'start with ' + BEGIN_COMMAND : ''}` +
-          `${!isEndWithEnd ? 'end with ' + END_COMMAND : ''}`.trim(),
+          `${!isStartWithBegin ? 'start with ' + ChargeCommandEnum.Begin : ''}` +
+          `${!isEndWithEnd ? 'end with ' + ChargeCommandEnum.End : ''}`.trim(),
         );
       }
 
@@ -53,9 +49,9 @@ export const parseTask: ActionSchema = {
         (commandLine, index) => {
           let inputValue: string | undefined = undefined;
 
-          const isStartStation = commandLine.startsWith(`${START_STATION_COMMAND}${COMMAND_SEPARATOR}`);
-          const isStopStation = commandLine.startsWith(`${STOP_STATION_COMMAND}${COMMAND_SEPARATOR}`);
-          const isWait = commandLine.startsWith(`${WAIT_STATION_COMMAND}${COMMAND_SEPARATOR}`);
+          const isStartStation = commandLine.startsWith(`${ChargeCommandEnum.StartStation}${COMMAND_SEPARATOR}`);
+          const isStopStation = commandLine.startsWith(`${ChargeCommandEnum.StopStation}${COMMAND_SEPARATOR}`);
+          const isWait = commandLine.startsWith(`${ChargeCommandEnum.Wait}${COMMAND_SEPARATOR}`);
 
           const isAllowedCommand = isStartStation || isStopStation || isWait;
 
@@ -70,30 +66,30 @@ export const parseTask: ActionSchema = {
           }
 
           if (isStartStation) {
-            ([, inputValue] = commandLine.split(`${START_STATION_COMMAND}${COMMAND_SEPARATOR}`));
+            ([, inputValue] = commandLine.split(`${ChargeCommandEnum.StartStation}${COMMAND_SEPARATOR}`));
             isAllowedInputValue = inputValue === 'all' || (!isNaN(Number(inputValue)) && Number(inputValue) >= 0);
             stepCommands.push({
-              step: START_STATION_COMMAND,
+              step: ChargeCommandEnum.StartStation,
               param: isNaN(Number(inputValue)) ? inputValue : Number(inputValue),
               index: index + 1,
             });
           }
 
           if (isStopStation) {
-            ([, inputValue] = commandLine.split(`${STOP_STATION_COMMAND}${COMMAND_SEPARATOR}`));
+            ([, inputValue] = commandLine.split(`${ChargeCommandEnum.StopStation}${COMMAND_SEPARATOR}`));
             isAllowedInputValue = inputValue === 'all' || (!isNaN(Number(inputValue)) && Number(inputValue) >= 0);
             stepCommands.push({
-              step: STOP_STATION_COMMAND,
+              step: ChargeCommandEnum.StopStation,
               param: isNaN(Number(inputValue)) ? inputValue : Number(inputValue),
               index: index + 1,
             });
           }
 
           if (isWait) {
-            ([, inputValue] = commandLine.split(`${WAIT_STATION_COMMAND}${COMMAND_SEPARATOR}`));
+            ([, inputValue] = commandLine.split(`${ChargeCommandEnum.Wait}${COMMAND_SEPARATOR}`));
             isAllowedInputValue = !isNaN(Number(inputValue)) && Number(inputValue) >= 0;
             stepCommands.push({
-              step: WAIT_STATION_COMMAND,
+              step: ChargeCommandEnum.Wait,
               param: Number(inputValue),
               index: index + 1,
             });
@@ -154,6 +150,6 @@ export const parseTask: ActionSchema = {
 
     ctx.params.id = taskId;
 
-    await ctx.emit(ChargeEvents.NewTaskCreated, { taskId });
+    await ctx.emit(ChargeEvent.NewTaskCreated, { taskId });
   },
 };

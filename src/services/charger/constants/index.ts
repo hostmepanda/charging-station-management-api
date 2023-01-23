@@ -1,1 +1,1 @@
-export { ChargeEvents } from './chargeEvents.enum';
+export { ChargeEvent } from './chargeEvents.enum';

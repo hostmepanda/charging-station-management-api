@@ -17,7 +17,8 @@ export class ChargerDbStore extends DbStore {
 
   async getRecordById(taskId: string | number) {
     return this.store!.get(
-      `SELECT raw_script as rawScript, requested_at as requestedAt, steps
+      `SELECT steps, requested_at as requestedAt, active_step_index as activeStepIndex, 
+            next_step_index as nextStepIndex
             FROM chargeScriptParse 
             WHERE id=(?)`,
       taskId,

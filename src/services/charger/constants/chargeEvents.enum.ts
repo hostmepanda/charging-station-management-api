@@ -1,4 +1,4 @@
-export enum ChargeEvents {
+export enum ChargeEvent {
   NewTaskCreated= 'NewTaskCreated',
-  ProcessNextTask = 'ProcessNextTask',
+  ProcessNextStep = 'ProcessNextStep',
 }
