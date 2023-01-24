@@ -26,6 +26,9 @@
 For the app SQLite is used. Each service can be setup to run its own DB or use one for every service by setting the `SERVICES_DB_PATH` environment variable. 
 Moleculer log level is `info` by default, but can be overridden with `CHARGE_MANAGE_API_MOL_LOG_LEVEL` to `warn` or `debug`.
 
+### Postman
+There is a postman config with CRUD requests to API that can be imported and used for any manual testing purposes or for automation tests.
+
 ### Environment variables
 
 - `CHARGER_DB_PATH`
