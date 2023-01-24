@@ -46,12 +46,14 @@ export class StationsDbStore extends DbStore {
     const { id } = getParams;
 
     return await this.store!.get(
-      `SELECT id, name, companies.name, stationTypes.name, stationTypes.max_power FROM stations
-            INNER JOIN companies 
-            ON stationTypes.company_id =  companies.id
-            INNER JOIN stationTypes
-            ON stationTypes.station_type_id = stationTypes.id
-            WHERE id=(?)`,
+      `SELECT stations.id, stations.name as stationName, companies.name as companyName, 
+            stationTypes.name as stationTypeName, stationTypes.max_power as maxPower
+            FROM stations
+            LEFT JOIN companies 
+            ON stations.company_id =  companies.id
+            FULL JOIN stationTypes
+            ON stations.station_type_id = stationTypes.id
+            WHERE stations.id=(?)`,
       id,
     );
   }
@@ -92,6 +94,17 @@ export class StationsDbStore extends DbStore {
     );
   }
 
+  async listRecordsByStationId(stationId: number) {
+    return await this.store!.all(
+      `SELECT s.id, s.name, s.company_id as companyId, t.max_power as maxPower
+            FROM stations as s
+            LEFT JOIN stationTypes as t
+            ON t.id = s.station_type_id
+            WHERE s.id=(?)
+            ORDER BY s.id ASC`,
+      stationId,
+    );
+  }
   async updateRecord(updateParams: UpdateRecordParams) {
     const { companyId, id, name, stationTypeId } = updateParams;
 

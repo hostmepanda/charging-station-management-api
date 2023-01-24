@@ -1,3 +1,3 @@
 export const listByStationTypeParamsSchema = {
-  id: { type: 'number' },
+  id: [{ type: 'number' }, { type: 'string' }],
 };

@@ -19,7 +19,7 @@ export const ChargerDbStoreMixin:ServiceSchema = {
         steps: JSON.parse(chargeTask.steps),
       };
     },
-    async updateTask(updateParams: StepParams) {
+    async updateTask(updateParams: StepParams & { taskId: string | number; }) {
       return this.store.updateRecord(updateParams);
     },
   },

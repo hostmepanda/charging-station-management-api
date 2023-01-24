@@ -77,6 +77,16 @@ export class CompaniesDbStore extends DbStore {
     );
   }
 
+  async listRecordsByChildIds(ids: (number | string)[]) {
+    return await this.store!.all(
+      `SELECT DISTINCT parent_company_id as parentId
+            FROM companies
+            WHERE id IN (?)
+            ORDER by parentId ASC`,
+      ids,
+    );
+  }
+
   async listRecordsWithPopulate(companyId: number) {
     return await this.store!.all(
       `SELECT stations.id as stationId, stations.name as stationName, stationTypes.max_power as maxPower

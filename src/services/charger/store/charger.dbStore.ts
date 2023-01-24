@@ -1,5 +1,5 @@
 import { DbStore } from '../../../storages/dbStore';
-import { StepParams, StepCommand, TaskId } from '../types';
+import { StepParams } from '../types';
 
 export class ChargerDbStore extends DbStore {
   async createTable() {
@@ -36,11 +36,13 @@ export class ChargerDbStore extends DbStore {
     );
   }
 
-  async updateRecord(updateParams: { steps: StepCommand[], taskId: TaskId }) {
-    const { steps, taskId } = updateParams;
+  async updateRecord(updateParams: StepParams & { taskId: string | number; }) {
+    const { activeStepIndex, nextStepIndex, steps, taskId } = updateParams;
     return this.store!.run(
-      `UPDATE chargeScriptParse SET steps=(?) WHERE id=(?)`,
+      `UPDATE chargeScriptParse SET steps=(?), active_step_index=(?), next_step_index=(?) WHERE id=(?)`,
       JSON.stringify(steps),
+      activeStepIndex,
+      nextStepIndex,
       taskId,
     );
   }
